@@ -22,7 +22,7 @@
   },
   "homepage": "https://github.com/reactbits/devpack#readme",
   "dependencies": {
-    "autoprefixer": "^6.3.1",
+    "autoprefixer": "^6.3.2",
     "babel": "^6.5.1",
     "babel-core": "^6.5.1",
     "babel-eslint": "^5.0.0-beta9",
@@ -38,7 +38,7 @@
     "eslint": "^1.10.3",
     "eslint-config-airbnb": "^5.0.0",
     "eslint-plugin-react": "^3.16.1",
-    "exports-loader": "^0.6.2",
+    "exports-loader": "^0.6.3",
     "express": "^4.13.4",
     "extract-text-webpack-plugin": "^1.0.1",
     "file-loader": "^0.8.5",
@@ -54,7 +54,7 @@
     "style-loader": "^0.13.0",
     "webpack": "^1.12.13",
     "webpack-dev-middleware": "^1.5.1",
-    "webpack-hot-middleware": "^2.7.0",
+    "webpack-hot-middleware": "^2.7.1",
     "webpack-sources": "^0.1.1"
   },
   "devDependencies": {}

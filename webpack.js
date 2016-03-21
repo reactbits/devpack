@@ -44,6 +44,35 @@ module.exports = function makeConfig(config) {
 		delete cfg.entry;
 	}
 
+	const loaders = [
+		{
+			test: /\.json$/,
+			loader: 'json',
+		},
+		{
+			test: /\.jsx?$/,
+			loader: 'babel',
+			exclude: /node_modules/,
+		},
+		{
+			test: /\.tsx?$/,
+			loaders: ['react-hot', 'ts-loader?instance=jsx'],
+			include: path.resolve(__dirname, 'src'),
+		},
+		{
+			test: /\.(scss|css)$/,
+			loader: ExtractTextPlugin.extract('style', [cssLoader, 'postcss', 'sass?sourceMap']),
+		},
+		{
+			test: /\.less$/,
+			loader: ExtractTextPlugin.extract('style', [cssLoader, 'postcss', 'less?sourceMap']),
+		},
+		{
+			test: /\.(jpg|png|gif|svg|eot|ttf|woff(2)?)$/,
+			loader: 'file-loader?name=[name].[ext]',
+		},
+	];
+
 	const base = {
 		devtool: 'source-map',
 		entry: entry, // eslint-disable-line
@@ -54,29 +83,7 @@ module.exports = function makeConfig(config) {
 		},
 		plugins: plugins, // eslint-disable-line
 		module: {
-			loaders: [
-				{
-					test: /\.json$/,
-					loader: 'json',
-				},
-				{
-					test: /\.jsx?$/,
-					loader: 'babel',
-					exclude: /node_modules/,
-				},
-				{
-					test: /\.(scss|css)$/,
-					loader: ExtractTextPlugin.extract('style', [cssLoader, 'postcss', 'sass?sourceMap']),
-				},
-				{
-					test: /\.less$/,
-					loader: ExtractTextPlugin.extract('style', [cssLoader, 'postcss', 'less?sourceMap']),
-				},
-				{
-					test: /\.(ttf|eot|svg|woff(2)?)$/,
-					loader: 'file-loader',
-				},
-			],
+			loaders: loaders, // eslint-disable-line
 		},
 		resolve: {
 			extensions: ['', '.js', '.jsx', '.json', '.css', '.scss', '.less'],

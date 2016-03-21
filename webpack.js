@@ -12,8 +12,8 @@ const cssLoader = 'css?sourceMap&modules&importLoaders=1&localIdentName=[local]'
 
 // TODO customize loaders
 
-module.exports = function makeConfig(options) {
-	if (!options) options = {}; // eslint-disable-line
+module.exports = function makeConfig(config) {
+	const cfg = config || {};
 
 	const plugins = [
 		new ExtractTextPlugin('styles.css', { allChunks: true }),
@@ -26,20 +26,25 @@ module.exports = function makeConfig(options) {
 		}),
 	];
 
-	if (options.jquery === true) {
+	if (cfg.jquery === true) {
 		plugins.push(new webpack.ProvidePlugin({
 			$: 'jquery',
 			jQuery: 'jquery',
 			'window.jQuery': 'jquery',
 		}));
+		delete cfg.jquery;
 	}
 
-	const entry = _.isArray(options.entry) ? options.entry : [
-		'webpack-hot-middleware/client',
-		_.isString(options.entry) ? options.entry : './src/index',
+	const webpackEntry = 'webpack-hot-middleware/client';
+	const entry = _.isArray(cfg.entry) ? [webpackEntry].concat(cfg.entry) : [
+		webpackEntry,
+		_.isString(cfg.entry) ? cfg.entry : './src/index',
 	];
+	if (cfg.entry) {
+		delete cfg.entry;
+	}
 
-	const config = {
+	const base = {
 		devtool: 'source-map',
 		entry: entry, // eslint-disable-line
 		output: {
@@ -79,5 +84,5 @@ module.exports = function makeConfig(options) {
 		postcss: [autoprefixer],
 	};
 
-	return _.merge(config, options.config || {});
+	return _.merge(base, cfg || {});
 };

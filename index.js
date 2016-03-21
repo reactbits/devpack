@@ -1,15 +1,22 @@
 const _ = require('lodash');
 const path = require('path');
+const fs = require('fs');
 const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
 const webpack = require('webpack');
 const makeConfig = require('./webpack');
 
+function makeDefaultConfig(cwd) {
+	const f = path.join(cwd, 'webpack.config.js');
+	const t = fs.statSync(f);
+	return t.isFile ? require(f) : makeConfig();
+}
+
 function start(options) {
 	const port = options.port || process.env.PORT || 8000;
-	const config = options.webpack || makeConfig();
 	const cwd = options.cwd || process.cwd();
+	const config = options.webpack || makeDefaultConfig(cwd);
 
 	const app = express();
 	const compiler = webpack(config);

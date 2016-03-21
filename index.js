@@ -13,7 +13,8 @@ function makeDefaultConfig(cwd) {
 	return t.isFile ? require(f) : makeConfig();
 }
 
-function start(options) {
+function start(opts) {
+	const options = opts || {};
 	const port = options.port || process.env.PORT || 8000;
 	const cwd = options.cwd || process.cwd();
 	const config = options.webpack || makeDefaultConfig(cwd);

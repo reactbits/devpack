@@ -74,7 +74,7 @@ module.exports = function makeConfig(options) {
 			],
 		},
 		resolve: {
-			extensions: ['', '.js', '.jsx', '.json', '.css', '.scss'],
+			extensions: ['', '.js', '.jsx', '.json', '.css', '.scss', '.less'],
 		},
 		postcss: [autoprefixer],
 	};

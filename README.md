@@ -1,3 +1,5 @@
+[![npm](https://img.shields.io/npm/dt/react-devpack.svg)](https://www.npmjs.com/package/react-devpack)
+
 # devpack
 Meta package of packages used in reactjs development.
 

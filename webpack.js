@@ -6,15 +6,34 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 // TODO production config
 const NODE_ENV = process.env.NODE_ENV || 'development';
+// const DEBUG = NODE_ENV === 'development';
+const PROD = NODE_ENV === 'production';
 
 // TODO allow to customize css loader
 const cssLoader = 'css?sourceMap&modules&importLoaders=1&localIdentName=[local]';
+const sassLoader = `${cssLoader}!postcss!sass?sourceMap`;
+const lessLoader = `${cssLoader}!postcss!less?sourceMap`;
 
 // TODO customize loaders
 // TODO unuse ExtractTextPlugin in development mode
 
+const uglifyOptions = {
+	sourceMap: true,
+	compressor: {
+		warnings: false,
+		dead_code: true,
+	},
+	output: {
+		// preamble: banner,
+		comments: 'all',
+	},
+	beautify: true,
+	mangle: false,
+};
+
 module.exports = function makeConfig(config) {
 	const cfg = config || {};
+	const cwd = cfg.cwd || process.cwd();
 
 	const plugins = [
 		new ExtractTextPlugin('styles.css', { allChunks: true }),
@@ -25,14 +44,16 @@ module.exports = function makeConfig(config) {
 				NODE_ENV: JSON.stringify(NODE_ENV),
 			},
 		}),
-	];
-
-	if (cfg.jquery === true) {
-		plugins.push(new webpack.ProvidePlugin({
+		cfg.jquery === true ? new webpack.ProvidePlugin({
 			$: 'jquery',
 			jQuery: 'jquery',
 			'window.jQuery': 'jquery',
-		}));
+		}) : null,
+		PROD ? new webpack.optimize.OccurenceOrderPlugin() : null,
+		PROD ? new webpack.optimize.UglifyJsPlugin(uglifyOptions) : null,
+	].filter(_.identity);
+
+	if (cfg.jquery === true) {
 		delete cfg.jquery;
 	}
 
@@ -58,15 +79,16 @@ module.exports = function makeConfig(config) {
 		{
 			test: /\.tsx?$/,
 			loaders: ['react-hot', 'ts-loader?instance=jsx'],
-			include: path.resolve(__dirname, 'src'),
 		},
 		{
 			test: /\.(scss|css)$/,
-			loader: ExtractTextPlugin.extract('style', [cssLoader, 'postcss', 'sass?sourceMap']),
+			// loader: PROD ? ExtractTextPlugin.extract('style', sassLoader) : `style!${sassLoader}`,
+			loader: ExtractTextPlugin.extract('style', sassLoader),
 		},
 		{
 			test: /\.less$/,
-			loader: ExtractTextPlugin.extract('style', [cssLoader, 'postcss', 'less?sourceMap']),
+			// loader: PROD ? ExtractTextPlugin.extract('style', lessLoader) : `style!${lessLoader}`,
+			loader: ExtractTextPlugin.extract('style', lessLoader),
 		},
 		{
 			test: /\.(jpg|png|gif|svg|eot|ttf|woff(2)?)$/,
@@ -78,7 +100,7 @@ module.exports = function makeConfig(config) {
 		devtool: 'source-map',
 		entry: entry, // eslint-disable-line
 		output: {
-			path: path.join(__dirname, 'static'),
+			path: path.join(cwd, 'static'),
 			filename: 'bundle.js',
 			publicPath: '/static/',
 		},

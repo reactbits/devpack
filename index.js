@@ -4,6 +4,9 @@ const fs = require('fs');
 const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
+const helmet = require('helmet');
+const cookieParser = require('cookie-parser');
+const bodyParser = require('body-parser');
 const webpack = require('webpack');
 const makeConfig = require('./webpack');
 
@@ -24,6 +27,23 @@ function start(opts) {
 
 	app.use(morgan('dev'));
 	app.use(cors());
+	app.use(helmet());
+
+	app.use(cookieParser);
+
+	// parse application/x-www-form-urlencoded
+	app.use(bodyParser.urlencoded({ extended: false }));
+
+	// parse application/json
+	app.use(bodyParser.json());
+
+	function logErrors(err, req, res, next) {
+		if (err) {
+			console.error(err.stack);
+		}
+		next(err);
+	}
+	app.use(logErrors);
 
 	app.use(require('webpack-dev-middleware')(compiler, {
 		noInfo: true,

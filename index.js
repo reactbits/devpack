@@ -45,8 +45,8 @@ function start(opts) {
 
 	app.use(express.static(cwd));
 
-	// TODO allow to override index route (isomorphic apps)
-	app.get('/', (req, res) => {
+	// otherwise return index.html
+	app.get('/*', (req, res) => {
 		res.sendFile(path.join(cwd, 'index.html'));
 	});
 

@@ -11,6 +11,7 @@ const NODE_ENV = process.env.NODE_ENV || 'development';
 const cssLoader = 'css?sourceMap&modules&importLoaders=1&localIdentName=[local]';
 
 // TODO customize loaders
+// TODO unuse ExtractTextPlugin in development mode
 
 module.exports = function makeConfig(config) {
 	const cfg = config || {};

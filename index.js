@@ -70,6 +70,13 @@ function start(opts) {
 		res.sendFile(path.join(cwd, 'index.html'));
 	});
 
+	app.use((err, req, res, next) => { // eslint-disable-line
+		if (err) {
+			console.log(err);
+			res.status(500).send('bad code path');
+		}
+	});
+
 	app.listen(port, '0.0.0.0', (err) => {
 		if (err) {
 			console.log(err);

@@ -29,6 +29,10 @@ function start(opts) {
 	app.use(cors());
 	app.use(helmet());
 
+	if (_.isFunction(options.initApp)) {
+		options.initApp(app);
+	}
+
 	app.use(cookieParser());
 
 	// parse application/x-www-form-urlencoded

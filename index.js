@@ -9,6 +9,7 @@ const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const webpack = require('webpack');
 const makeConfig = require('./webpack');
+const proxyMiddleware = require('http-proxy-middleware');
 
 function makeDefaultConfig(cwd) {
 	const f = path.join(cwd, 'webpack.config.js');
@@ -28,6 +29,24 @@ function start(opts) {
 	app.use(morgan('dev'));
 	app.use(cors());
 	app.use(helmet());
+
+	function useProxy(set) {
+		const spec = _.assign({}, set);
+		const context = spec.context || spec.path;
+		if (!context) {
+			throw new Error('missing context in proxy options');
+		}
+		const proxyOptions = _.omit(spec, ['context', 'path']);
+		app.use(proxyMiddleware(context, proxyOptions));
+	}
+
+	if (_.isString(options.proxy)) {
+		app.use(proxyMiddleware(options.proxy));
+	} else if (_.isArray(options.proxy)) {
+		options.proxy.forEach(useProxy);
+	} else if (_.isObject(options.proxy)) {
+		useProxy(options.proxy);
+	}
 
 	if (_.isFunction(options.initApp)) {
 		options.initApp(app);

@@ -14,7 +14,7 @@ const proxyMiddleware = require('http-proxy-middleware');
 function makeDefaultConfig(cwd) {
 	const f = path.join(cwd, 'webpack.config.js');
 	const t = fs.statSync(f);
-	return t.isFile ? require(f) : makeConfig();
+	return t.isFile ? require(f) : makeConfig(); // eslint-disable-line
 }
 
 function start(opts) {
@@ -68,13 +68,15 @@ function start(opts) {
 	}
 	app.use(logErrors);
 
-	app.use(require('webpack-dev-middleware')(compiler, {
+	const devMiddleware = require('webpack-dev-middleware'); // eslint-disable-line
+	app.use(devMiddleware(compiler, {
 		noInfo: true,
 		publicPath: config.output.publicPath,
 		stats: 'errors-only',
 	}));
 
-	app.use(require('webpack-hot-middleware')(compiler));
+	const hotMiddleware = require('webpack-hot-middleware'); // eslint-disable-line
+	app.use(hotMiddleware(compiler));
 
 	if (_.isFunction(options.extendApp)) {
 		options.extendApp(app);

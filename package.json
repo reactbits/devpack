@@ -1,6 +1,6 @@
 {
   "name": "react-devpack",
-  "version": "0.1.29",
+  "version": "0.1.30",
   "description": "Meta package of packages used in reactjs development.",
   "main": "index.js",
   "scripts": {

@@ -64,7 +64,7 @@
     "sass-loader": "^4.0.2",
     "style-loader": "^0.13.1",
     "ts-loader": "^0.9.5",
-    "typescript": "^2.0.3",
+    "typescript": "^2.0.6",
     "webpack": "^1.13.2",
     "webpack-dev-middleware": "^1.8.4",
     "webpack-hot-middleware": "^2.13.0",

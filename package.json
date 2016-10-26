@@ -65,7 +65,7 @@
     "style-loader": "^0.13.1",
     "ts-loader": "^0.9.5",
     "typescript": "^2.0.3",
-    "webpack": "^1.13.2",
+    "webpack": "^1.13.3",
     "webpack-dev-middleware": "^1.8.4",
     "webpack-hot-middleware": "^2.13.0",
     "webpack-sources": "^0.1.2"

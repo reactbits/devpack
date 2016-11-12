@@ -68,6 +68,6 @@
     "webpack": "^1.13.3",
     "webpack-dev-middleware": "^1.8.4",
     "webpack-hot-middleware": "^2.13.2",
-    "webpack-sources": "^0.1.2"
+    "webpack-sources": "^0.1.3"
   }
 }

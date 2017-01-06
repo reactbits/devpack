@@ -57,11 +57,16 @@ module.exports = function makeConfig(config) {
     delete cfg.jquery;
   }
 
+  const babelPolyfillEntry = 'babel-polyfill';
   const webpackEntry = 'webpack-hot-middleware/client';
-  const entry = _.isArray(cfg.entry) ? [webpackEntry].concat(cfg.entry) : [
-    webpackEntry,
-    _.isString(cfg.entry) ? cfg.entry : './src/index',
-  ];
+  const appEntry = () => {
+    if (_.isArray(cfg.entry)) {
+      return cfg.entry;
+    }
+    return _.isString(cfg.entry) ? cfg.entry : './src/index';
+  };
+  const entry = [babelPolyfillEntry, webpackEntry].concat(appEntry());
+
   if (cfg.entry) {
     delete cfg.entry;
   }

@@ -87,15 +87,15 @@ module.exports = function makeConfig(config) {
     },
     {
       test: /\.(scss|css)$/,
-      loader: `style!${sassLoader}`,
+      // loader: `style!${sassLoader}`,
       // loader: PROD ? ExtractTextPlugin.extract('style', sassLoader) : `style!${sassLoader}`,
-      // loader: ExtractTextPlugin.extract('style', sassLoader),
+      loader: ExtractTextPlugin.extract('style', sassLoader),
     },
     {
       test: /\.less$/,
-      loader: `style!${lessLoader}`,
+      // loader: `style!${lessLoader}`,
       // loader: PROD ? ExtractTextPlugin.extract('style', lessLoader) : `style!${lessLoader}`,
-      // loader: ExtractTextPlugin.extract('style', lessLoader),
+      loader: ExtractTextPlugin.extract('style', lessLoader),
     },
     {
       test: /\.(jpg|png|gif|svg|eot|ttf|woff(2)?)$/,

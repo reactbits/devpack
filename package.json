@@ -23,7 +23,7 @@
   },
   "homepage": "https://github.com/reactbits/devpack#readme",
   "dependencies": {
-    "autoprefixer": "^6.7.4",
+    "autoprefixer": "^6.7.5",
     "awesome-typescript-loader": "^3.0.4",
     "babel-cli": "^6.23.0",
     "babel-core": "^6.23.1",

@@ -24,7 +24,7 @@
   "homepage": "https://github.com/reactbits/devpack#readme",
   "dependencies": {
     "autoprefixer": "^6.7.4",
-    "awesome-typescript-loader": "^3.0.6",
+    "awesome-typescript-loader": "^3.0.7",
     "babel-cli": "^6.23.0",
     "babel-core": "^6.23.1",
     "babel-eslint": "^7.1.1",

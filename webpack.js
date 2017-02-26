@@ -192,5 +192,5 @@ module.exports = function makeConfig(appConfig) {
     },
   };
 
-  return Object.assign({}, base, _.omit(config, ['cwd', 'jquery', 'entry']));
+  return _.merge(base, _.omit(config, ['cwd', 'jquery', 'entry']));
 };

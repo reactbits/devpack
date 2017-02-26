@@ -152,9 +152,7 @@ function makeEntry(config) {
   return {
     vendor: [
       'webpack-hot-middleware/client',
-      'babel-polyfill',
       'isomorphic-fetch',
-      // TODO add custom polyfills
     ],
     app: appEntry(config),
   };

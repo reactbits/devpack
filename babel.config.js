@@ -1,4 +1,5 @@
 const path = require('path');
+const babelPresetEnv = require('babel-preset-env').default;
 
 const plugins = [
   // class { handleClick = () => { } }
@@ -32,17 +33,18 @@ const plugins = [
   require.resolve('babel-plugin-syntax-dynamic-import'),
 ];
 
+// TODO parametrize browserlist
 const presets = [
-  [require.resolve('babel-preset-env'), {
+  babelPresetEnv({
     targets: {
       node: 'current',
       browsers: [
         'last 2 versions',
-        'IE 11',
+        'IE >= 11',
       ],
     },
     debug: true,
-  }],
+  }),
   // require.resolve('babel-preset-latest'),
   require.resolve('babel-preset-react'),
 ];

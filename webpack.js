@@ -5,6 +5,7 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const { CheckerPlugin, TsConfigPathsPlugin } = require('awesome-typescript-loader');
 const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
 const postcssConfig = require('./postcss.config');
+const babelConfig = require('./babel.config');
 
 // TODO production config
 const NODE_ENV = process.env.NODE_ENV || 'development';
@@ -75,7 +76,12 @@ function makeRules() {
     {
       test: /\.jsx?$/,
       loader: 'babel-loader',
-      query: {
+      options: {
+        babelrc: false,
+        presets: babelConfig,
+        // This is a feature of `babel-loader` for webpack (not Babel itself).
+        // It enables caching results in ./node_modules/.cache/babel-loader/
+        // directory for faster rebuilds.
         cacheDirectory: true,
       },
     },
@@ -155,19 +161,19 @@ module.exports = function makeConfig(appConfig) {
 
   const base = {
     devtool: 'source-map',
-    entry: entry, // eslint-disable-line
+    entry,
     output: {
       path: path.join(cwd, 'static'),
       filename: '[name].bundle.js',
       devtoolModuleFilenameTemplate: '[absolute-resource-path]',
       publicPath: '/static/',
     },
-    plugins: plugins, // eslint-disable-line
+    plugins,
     module: {
-      rules: rules, // eslint-disable-line
+      rules,
     },
     resolve: {
-      extensions: ['.js', '.jsx', '.ts', '.tsx', '.json', '.css', '.scss', '.less'],
+      extensions: ['.js', '.jsx', '.ts', '.tsx', '.json', '.css', '.scss'],
     },
     // Some libraries import Node modules but don't use them in the browser.
     // Tell Webpack to provide empty mocks for them so importing them works.

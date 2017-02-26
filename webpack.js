@@ -71,7 +71,7 @@ function makeRules() {
     { parser: { requireEnsure: false } },
     {
       test: /\.json$/,
-      loader: 'json',
+      loader: 'json-loader',
     },
     {
       test: /\.jsx?$/,
@@ -115,7 +115,7 @@ function makeRules() {
     // In production, they would get copied to the `build` folder.
     {
       test: /\.(ico|jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2)(\?.*)?$/,
-      loader: 'file',
+      loader: 'file-loader',
       query: {
         name: 'static/media/[name].[hash:8].[ext]',
       },
@@ -124,7 +124,7 @@ function makeRules() {
     // assets smaller than specified size as data URLs to avoid requests.
     {
       test: /\.(mp4|webm|wav|mp3|m4a|aac|oga)(\?.*)?$/,
-      loader: 'url',
+      loader: 'url-loader',
       query: {
         limit: 10000,
         name: 'static/media/[name].[hash:8].[ext]',

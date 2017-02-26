@@ -3,6 +3,8 @@ const path = require('path');
 const webpack = require('webpack');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const { CheckerPlugin, TsConfigPathsPlugin } = require('awesome-typescript-loader');
+const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
+const postcssConfig = require('./postcss.config');
 
 // TODO production config
 const NODE_ENV = process.env.NODE_ENV || 'development';
@@ -57,11 +59,15 @@ function makePlugins(cfg) {
     PROD ? new webpack.optimize.OccurrenceOrderPlugin() : null,
     // Try to dedupe duplicated modules, if any:
     PROD ? new webpack.optimize.DedupePlugin() : null,
+
+    new CaseSensitivePathsPlugin(),
   ];
 }
 
-function makeLoaders() {
+function makeRules() {
   return [
+    // Disable require.ensure as it's not a standard language feature.
+    { parser: { requireEnsure: false } },
     {
       test: /\.json$/,
       loader: 'json',
@@ -79,18 +85,24 @@ function makeLoaders() {
     },
     {
       test: /\.s?css$/,
-      loader: extractCSS.extract([
-        {
-          loader: 'css-loader',
-          query: {
-            sourceMap: true,
-            modules: true,
-            importLoaders: 1,
-            localIdentName: '[local]',
+      use: extractCSS.extract({
+        fallback: 'style-loader',
+        use: [
+          {
+            loader: 'css-loader',
+            query: {
+              sourceMap: true,
+              modules: true,
+              importLoaders: 1,
+              localIdentName: '[local]',
+            },
           },
-        },
-        'postcss-loader',
-      ]),
+          {
+            loader: 'postcss-loader',
+            options: postcssConfig,
+          },
+        ],
+      }),
     },
     // "file" loader makes sure those assets get served by WebpackDevServer.
     // When you `import` an asset, you get its (virtual) filename.
@@ -115,14 +127,14 @@ function makeLoaders() {
   ];
 }
 
-function appEntry(cfg) {
-  if (_.isArray(cfg.entry)) {
-    return cfg.entry;
+function appEntry(config) {
+  if (_.isArray(config.entry)) {
+    return config.entry;
   }
-  return _.isString(cfg.entry) ? cfg.entry : './src/index';
+  return _.isString(config.entry) ? config.entry : './src/index';
 }
 
-function makeEntry(cfg) {
+function makeEntry(config) {
   return {
     vendor: [
       'webpack-hot-middleware/client',
@@ -130,40 +142,41 @@ function makeEntry(cfg) {
       'isomorphic-fetch',
       // TODO add custom polyfills
     ],
-    app: appEntry(cfg),
+    app: appEntry(config),
   };
 }
 
-module.exports = function makeConfig(config) {
-  const cfg = config || {};
-  const cwd = cfg.cwd || process.cwd();
-  const plugins = makePlugins(cfg).filter(_.identity);
-  const loaders = makeLoaders();
-  const entry = makeEntry(cfg);
+module.exports = function makeConfig(appConfig) {
+  const config = appConfig || {};
+  const cwd = config.cwd || process.cwd();
+  const plugins = makePlugins(config).filter(_.identity);
+  const rules = makeRules();
+  const entry = makeEntry(config);
 
   const base = {
     devtool: 'source-map',
     entry: entry, // eslint-disable-line
     output: {
       path: path.join(cwd, 'static'),
-      /**
-       * Specifies the name of each output file on disk.
-       * IMPORTANT: You must not specify an absolute path here!
-       *
-       * See: http://webpack.github.io/docs/configuration.html#output-filename
-       */
       filename: '[name].bundle.js',
       devtoolModuleFilenameTemplate: '[absolute-resource-path]',
       publicPath: '/static/',
     },
     plugins: plugins, // eslint-disable-line
     module: {
-      loaders: loaders, // eslint-disable-line
+      rules: rules, // eslint-disable-line
     },
     resolve: {
       extensions: ['.js', '.jsx', '.ts', '.tsx', '.json', '.css', '.scss', '.less'],
     },
+    // Some libraries import Node modules but don't use them in the browser.
+    // Tell Webpack to provide empty mocks for them so importing them works.
+    node: {
+      fs: 'empty',
+      net: 'empty',
+      tls: 'empty',
+    },
   };
 
-  return Object.assign({}, base, _.omit(cfg, ['cwd', 'jquery', 'entry']));
+  return Object.assign({}, base, _.omit(config, ['cwd', 'jquery', 'entry']));
 };

@@ -110,6 +110,7 @@ function makeRules() {
               localIdentName: '[local]',
             },
           },
+          'sass-loader',
           {
             loader: 'postcss-loader',
             options: postcssConfig,

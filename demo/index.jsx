@@ -1,10 +1,14 @@
 import _ from 'lodash';
 import React from 'react';
+import classNames from 'classnames';
 import { render } from 'react-dom';
+import { hover, hint } from 'css-effects';
 
 const styles = require('./demo.scss');
 
 const greeting = _.filter(['Hello', 'World!'], _.identity).join(', ');
 console.log(greeting);
 
-render(<div className={styles.red}>{greeting}</div>, document.getElementById('root'));
+const className = classNames(styles.red, hover('grow'), hint());
+
+render(<div className={className} data-hint="This is hint">{greeting}</div>, document.getElementById('root'));

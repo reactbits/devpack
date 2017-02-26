@@ -1,4 +1,3 @@
-const precsss = require('precss');
 const autoprefixer = require('autoprefixer');
 
 module.exports = {
@@ -6,7 +5,6 @@ module.exports = {
   syntax: 'postcss-scss',
   map: 'inline',
   plugins: [
-    precsss,
     autoprefixer({
       browsers: [
         '>1%',

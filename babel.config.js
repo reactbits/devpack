@@ -31,6 +31,7 @@ const plugins = [
   }],
   // Adds syntax support for import()
   require.resolve('babel-plugin-syntax-dynamic-import'),
+  require.resolve('babel-plugin-lodash'),
 ];
 
 // TODO parametrize browserlist

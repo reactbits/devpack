@@ -4,6 +4,8 @@ const webpack = require('webpack');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const { CheckerPlugin, TsConfigPathsPlugin } = require('awesome-typescript-loader');
 const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
+const LodashModuleReplacementPlugin = require('lodash-webpack-plugin');
+
 const postcssConfig = require('./postcss.config');
 const babelConfig = require('./babel.config');
 
@@ -16,6 +18,11 @@ const extractCSS = new ExtractTextPlugin('styles.css');
 
 function makePlugins(cfg) {
   return [
+    new LodashModuleReplacementPlugin({
+      collections: true,
+      paths: true,
+    }),
+
     extractCSS,
 
     new TsConfigPathsPlugin(),
